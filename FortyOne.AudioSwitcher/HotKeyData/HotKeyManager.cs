@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FortyOne.AudioSwitcher.Configuration;
@@ -12,11 +14,14 @@ namespace FortyOne.AudioSwitcher.HotKeyData
     {
         private static readonly List<HotKey> _hotkeys = new List<HotKey>();
         public static BindingList<HotKey> HotKeys = new BindingList<HotKey>();
+        private static SoundPlayer player = new SoundPlayer();
 
         static HotKeyManager()
         {
             LoadHotKeys();
             RefreshHotkeys();
+            player.SoundLocation = "duck.wav";
+            player.Load();
         }
 
         public static event EventHandler HotKeyPressed;
@@ -81,7 +86,10 @@ namespace FortyOne.AudioSwitcher.HotKeyData
         private static void hk_HotKeyPressed(object sender, EventArgs e)
         {
             if (HotKeyPressed != null)
+            {
                 HotKeyPressed(sender, e);
+                player.Play();
+            }
         }
 
         public static void SaveHotKeys()
